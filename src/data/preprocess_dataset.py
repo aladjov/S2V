@@ -117,13 +117,13 @@ def _build_vocabulary(input_files):
       wordcount.update(sentence.split())
 
       num += 1
-      if num % 1000000 == 0:
+      if num % 1_000_000 == 0:
         tf.logging.info("Processed %d sentences", num)
 
   tf.logging.info("Processed %d sentences total", num)
 
-  words = wordcount.keys()
-  freqs = wordcount.values()
+  words = list(wordcount.keys())
+  freqs = list(wordcount.values())
   sorted_indices = np.argsort(freqs)[::-1]
 
   vocab = collections.OrderedDict()
@@ -222,7 +222,7 @@ def _write_dataset(name, dataset, indices, num_shards):
     num_shards: The number of output shards.
   """
   tf.logging.info("Writing dataset %s", name)
-  borders = np.int32(np.linspace(0, len(indices), num_shards + 1))
+  borders = np.linspace(0, len(indices), num_shards + 1, dtype=np.int32)
   for i in range(num_shards):
     filename = os.path.join(FLAGS.output_dir, "%s-%.5d-of-%.5d" % (name, i,
                                                                    num_shards))
@@ -270,7 +270,7 @@ def main(unused_argv):
   #shuffled_indices = np.random.permutation(len(dataset))
   #val_indices = shuffled_indices[:FLAGS.num_validation_sentences]
   #train_indices = shuffled_indices[FLAGS.num_validation_sentences:]
-  indices = range(len(dataset))
+  indices = list(range(len(dataset)))
   val_indices = indices[:FLAGS.num_validation_sentences]
   train_indices = indices[FLAGS.num_validation_sentences:]
 

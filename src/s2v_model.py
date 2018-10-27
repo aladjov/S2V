@@ -270,7 +270,7 @@ class s2v(object):
     """
 
     all_sen_embs = self.thought_vectors
-  
+
     if FLAGS.dropout:
       mask_shp = [1, self.config.encoder_dim]
       bin_mask = tf.random_uniform(mask_shp) > FLAGS.dropout_rate
@@ -286,7 +286,7 @@ class s2v(object):
 
     # Targets
     targets_np = np.zeros((FLAGS.batch_size, FLAGS.batch_size))
-    ctxt_sent_pos = range(-FLAGS.context_size, FLAGS.context_size + 1)
+    ctxt_sent_pos = list(range(-FLAGS.context_size, FLAGS.context_size + 1))
     ctxt_sent_pos.remove(0)
     for ctxt_pos in ctxt_sent_pos:
       targets_np += np.eye(FLAGS.batch_size, k=ctxt_pos)
@@ -296,8 +296,11 @@ class s2v(object):
     targets = tf.constant(targets_np, dtype=tf.float32)
 
     # Forward and backward scores    
-    f_scores = scores[:-1] 
+    f_scores = scores[:-1]
     b_scores = scores[1:]
+
+    self.f_scores = f_scores
+    self.b_scores = b_scores
 
     losses = tf.nn.softmax_cross_entropy_with_logits(
         labels=targets, logits=scores)
@@ -311,7 +314,7 @@ class s2v(object):
       f_max = tf.to_int64(tf.argmax(f_scores, axis=1))
       b_max = tf.to_int64(tf.argmax(b_scores, axis=1))
 
-      targets = range(FLAGS.batch_size - 1)
+      targets = list(range(FLAGS.batch_size - 1))
       targets = tf.constant(targets, dtype=tf.int64)
       fwd_targets = targets + 1
 
@@ -320,7 +323,7 @@ class s2v(object):
         "Acc/Bwd Acc": tf.contrib.slim.metrics.streaming_accuracy(b_max, targets)
       })
 
-      for name, value in names_to_values.iteritems():
+      for name, value in names_to_values.items():
         tf.summary.scalar(name, value)
 
       self.eval_op = names_to_updates.values()

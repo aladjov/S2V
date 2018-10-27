@@ -26,4 +26,3 @@ python src/evaluate.py \
 	--model_config="$MDL_CFGS/$CFG/eval.json" \
 	--results_path="$MDLS_PATH" \
 	--Glove_path=$GLOVE_PATH
-
