@@ -33,8 +33,11 @@ def vocab_config(vocab_config, mode):
   config.dim = vocab_config['dim']
   config.size = vocab_config['size']
   if config.mode == 'fixed' and mode != "eval":
-    config.vocab_file = os.path.join(FLAGS.Glove_path, 'glove.840B.300d.txt')
-    config.embs_file = os.path.join(FLAGS.Glove_path, 'glove.840B.300d.npy')
+    # config.vocab_file = os.path.join(FLAGS.Glove_path, 'glove.840B.300d.txt')
+    # config.embs_file = os.path.join(FLAGS.Glove_path, 'glove.840B.300d.npy')
+    config.vocab_file = os.path.join(FLAGS.Glove_path, 'glove.6B.300d_unk_vocab.txt')
+    config.embs_file = os.path.join(FLAGS.Glove_path, 'glove.6B.300d_unk_embed.npy')
+    
   elif mode == "encode" and config.mode == "trained":
     config.vocab_file = vocab_config['vocab_file']
   elif mode == "encode" and config.mode == "expand":

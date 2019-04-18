@@ -39,7 +39,7 @@ def read_vocab(vocabulary_file):
   tf.logging.info("Reading vocabulary from %s", vocabulary_file)
   with tf.gfile.GFile(vocabulary_file, mode="r") as f:
     lines = list(f.readlines())
-  reverse_vocab = [line.decode("utf-8").strip() for line in lines]
+  reverse_vocab = [line.strip() for line in lines]
   tf.logging.info("Loaded vocabulary with %d words.", len(reverse_vocab))
  
   #tf.logging.info("Loading embedding matrix from %s", embedding_matrix_file)
